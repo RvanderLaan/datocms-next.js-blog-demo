@@ -25,6 +25,11 @@ export async function getStaticProps({ preview }) {
           id
           testtext {
             value
+            blocks {
+              id
+              __typename
+              createdAt
+            }
           }
           _status
           _firstPublishedAt
@@ -80,6 +85,18 @@ export default function Index({ subscription }) {
           </div>
           <StructuredText
             data={requestpage?.testtext || error?.toString() || ""}
+            renderBlock={({ record }) => {
+              if (record.__typename === "ImageBlockRecord") {
+                return <Image data={record.image.responsiveImage} />;
+              }
+
+              return (
+                <>
+                  <p>Don't know how to render a block!</p>
+                  <pre>{JSON.stringify(record, null, 2)}</pre>
+                </>
+              );
+            }}
           />
         </Container>
       </Layout>
