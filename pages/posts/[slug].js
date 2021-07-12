@@ -21,14 +21,14 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params, preview = false }) {
   const graphqlRequest = {
-    query: `
+    query: /* GraphQL */ `
       query PostBySlug($slug: String) {
         site: _site {
           favicon: faviconMetaTags {
             ...metaTagsFragment
           }
         }
-        post(filter: {slug: {eq: $slug}}) {
+        post(filter: { slug: { eq: $slug } }) {
           seo: _seoMetaTags {
             ...metaTagsFragment
           }
@@ -38,47 +38,65 @@ export async function getStaticProps({ params, preview = false }) {
             value
             blocks {
               __typename
-              ...on ImageBlockRecord {
+              ... on ImageBlockRecord {
                 id
                 image {
-                  responsiveImage(imgixParams: {fm: jpg, fit: crop, w: 2000, h: 1000 }) {
+                  responsiveImage(
+                    imgixParams: { fm: jpg, fit: crop, w: 2000, h: 1000 }
+                  ) {
                     ...responsiveImageFragment
                   }
                 }
               }
+              ... on BespaarcheckRecord {
+                id
+                showBespaarcheck
+              }
             }
           }
           date
-          ogImage: coverImage{
-            url(imgixParams: {fm: jpg, fit: crop, w: 2000, h: 1000 })
+          ogImage: coverImage {
+            url(imgixParams: { fm: jpg, fit: crop, w: 2000, h: 1000 })
           }
           coverImage {
-            responsiveImage(imgixParams: {fm: jpg, fit: crop, w: 2000, h: 1000 }) {
+            responsiveImage(
+              imgixParams: { fm: jpg, fit: crop, w: 2000, h: 1000 }
+            ) {
               ...responsiveImageFragment
             }
           }
           author {
             name
             picture {
-              url(imgixParams: {fm: jpg, fit: crop, w: 100, h: 100, sat: -100})
+              url(
+                imgixParams: { fm: jpg, fit: crop, w: 100, h: 100, sat: -100 }
+              )
             }
           }
         }
 
-        morePosts: allPosts(orderBy: date_DESC, first: 2, filter: {slug: {neq: $slug}}) {
+        morePosts: allPosts(
+          orderBy: date_DESC
+          first: 2
+          filter: { slug: { neq: $slug } }
+        ) {
           title
           slug
           excerpt
           date
           coverImage {
-            responsiveImage(imgixParams: {fm: jpg, fit: crop, w: 2000, h: 1000 }) {
+            responsiveImage(
+              imgixParams: { fm: jpg, fit: crop, w: 2000, h: 1000 }
+            ) {
               ...responsiveImageFragment
             }
           }
           author {
             name
             picture {
-              url(imgixParams: {fm: jpg, fit: crop, w: 100, h: 100, sat: -100})
+              url(
+                imgixParams: { fm: jpg, fit: crop, w: 100, h: 100, sat: -100 }
+              )
             }
           }
         }
